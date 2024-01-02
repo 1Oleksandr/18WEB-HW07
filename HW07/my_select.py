@@ -1,6 +1,6 @@
 from sqlalchemy import func, desc, select, and_
 
-from src.models import Teacher, Student, Discipline, Group, Grade
+from src.models import Teacher, Student, Discipline, Teacher, Grade, Group
 from src.db import session
 
 
@@ -36,16 +36,16 @@ def select_2(discipline_name):
 def select_3(discipline_name):
     # Знайти середній бал у групах з певного предмета.
     result = session.query(Discipline.name,
-                           Group.name,
+                           Teacher.fullname,
                            func.round(func.avg(Grade.grade),
                                       2).label('average_grade')
                            ) \
         .select_from(Grade) \
         .join(Student) \
         .join(Discipline) \
-        .join(Group) \
+        .join(Teacher) \
         .filter(Discipline.name == discipline_name) \
-        .group_by(Discipline.name, Group.name) \
+        .group_by(Discipline.name, Teacher.fullname) \
         .all()
     return result
 
@@ -85,7 +85,7 @@ def select_6(group_id):
 
 def select_7(group_id, discipline_id):
     # Знайти оцінки студентів у окремій групі з певного предмета
-    result = session.query(Group.name,
+    result = session.query(Teacher.fullname,
                            Discipline.name,
                            Student.fullname,
                            Grade.grade
@@ -93,10 +93,10 @@ def select_7(group_id, discipline_id):
         .select_from(Grade) \
         .join(Discipline) \
         .join(Student) \
-        .join(Group) \
+        .join(Teacher) \
         .filter(and_(Grade.discipline_id == discipline_id,
                      Student.group_id == group_id)) \
-        .order_by(Group.name, Discipline.name, Student.fullname, desc(Grade.grade)) \
+        .order_by(Teacher.fullname, Discipline.name, Student.fullname, desc(Grade.grade)) \
         .all()
     return result
 

@@ -4,7 +4,7 @@ from random import randint, choice
 from faker import Faker
 from sqlalchemy import select
 
-from src.models import Teacher, Student, Discipline, Grade, Group
+from src.models import Teacher, Student, Discipline, Grade, Teacher
 from src.db import session
 
 
@@ -51,11 +51,11 @@ def fill_data():
 
     def seed_groups():
         for group in groups:
-            session.add(Group(name=group))
+            session.add(Teacher(name=group))
         session.commit()
 
     def seed_students():
-        group_ids = session.scalars(select(Group.id)).all()
+        group_ids = session.scalars(select(Teacher.id)).all()
         for _ in range(NUMBER_STUDENTS):
             student = Student(fullname=fake.name(), group_id=choice(group_ids))
             session.add(student)

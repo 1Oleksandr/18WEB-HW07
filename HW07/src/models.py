@@ -35,8 +35,8 @@ class Grade(Base):
     date_of = Column(Date, nullable=True)
     student_id = Column(ForeignKey("students.id", ondelete="CASCADE"))
     discipline_id = Column(ForeignKey("disciplines.id", ondelete="CASCADE"))
-    student = relationship("Student", backref="grade")
-    discipline = relationship("Discipline", backref="grade")
+    student = relationship("Student", backref="grades")
+    discipline = relationship("Discipline", backref="grades")
 
 
 class Teacher(Base):
